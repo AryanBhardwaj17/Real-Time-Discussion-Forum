@@ -1,0 +1,235 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0">
+  <diagram id="er-diagram" name="ER Diagram - All Databases">
+    <mxGraphModel dx="2095" dy="890" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="2400" pageHeight="1800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="auth_db_label" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontColor=#1E40AF;" value="&lt;b&gt;AUTH DATABASE&lt;/b&gt;&lt;br&gt;(postgres_auth / auth_db)" vertex="1">
+          <mxGeometry height="50" width="340" x="40" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="users_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;users&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="340" x="40" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="users_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;align=left;verticalAlign=top;spacingTop=0;spacingLeft=2;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;email&lt;/b&gt; : VARCHAR(320) - UNIQUE, INDEX&lt;br&gt;&lt;b&gt;username&lt;/b&gt; : VARCHAR(50) - UNIQUE, INDEX&lt;br&gt;&lt;b&gt;password_hash&lt;/b&gt; : VARCHAR(128)&lt;br&gt;&lt;b&gt;name&lt;/b&gt; : VARCHAR(100) - NULLABLE&lt;br&gt;&lt;b&gt;avatar_url&lt;/b&gt; : VARCHAR(500) - NULLABLE&lt;br&gt;&lt;b&gt;bio&lt;/b&gt; : TEXT - NULLABLE&lt;br&gt;&lt;b&gt;role&lt;/b&gt; : VARCHAR(20) - FK &amp;rarr; roles.code, DEFAULT &#39;member&#39;&lt;br&gt;&lt;b&gt;is_active&lt;/b&gt; : BOOLEAN - DEFAULT true&lt;br&gt;&lt;b&gt;deactivated_by_admin&lt;/b&gt; : BOOLEAN - DEFAULT false&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; : TIMESTAMPTZ - DEFAULT now()&lt;br&gt;&lt;b&gt;updated_at&lt;/b&gt; : TIMESTAMPTZ - DEFAULT now(), ON UPDATE&lt;/div&gt;" vertex="1">
+          <mxGeometry height="260" width="340" x="40" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="rt_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;refresh_tokens&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="340" x="40" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="rt_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;user_id&lt;/b&gt; : UUID - FK &amp;rarr; users.id (CASCADE), INDEX&lt;br&gt;&lt;b&gt;token_hash&lt;/b&gt; : VARCHAR(128) - UNIQUE, INDEX&lt;br&gt;&lt;b&gt;expires_at&lt;/b&gt; : TIMESTAMPTZ&lt;br&gt;&lt;b&gt;is_revoked&lt;/b&gt; : BOOLEAN - DEFAULT false&lt;br&gt;&lt;b&gt;replaced_by&lt;/b&gt; : UUID - FK &amp;rarr; refresh_tokens.id, NULLABLE&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; : TIMESTAMPTZ - DEFAULT now()&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="340" x="40" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_rt_users" edge="1" parent="1" source="rt_header" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="users_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_rt_label" connectable="0" parent="fk_rt_users" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#6c8ebf;" value="user_id" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint x="30" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_rt_self" edge="1" parent="1" source="rt_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=1;dashed=1;endArrow=ERzeroToOne;startArrow=ERzeroToOne;curved=1;" target="rt_cols">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="10" y="529" />
+              <mxPoint x="10" y="461" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_rt_self_label" connectable="0" parent="fk_rt_self" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#6c8ebf;" value="replaced_by" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint x="-30" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="roles_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;roles&lt;/b&gt; (lookup)" vertex="1">
+          <mxGeometry height="30" width="220" x="-280" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="roles_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;code&lt;/b&gt; : VARCHAR(20) (PK)&lt;br&gt;&lt;b&gt;label&lt;/b&gt; : VARCHAR(100)&lt;br&gt;&lt;b&gt;is_active&lt;/b&gt; : BOOLEAN - DEFAULT true&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;Seeded: admin, moderator, member&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="220" x="-280" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_users_roles" edge="1" parent="1" source="users_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.3;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#6c8ebf;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="roles_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_users_roles_label" connectable="0" parent="fk_users_roles" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#6c8ebf;" value="role → code" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="content_db_label" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontColor=#166534;" value="&lt;b&gt;CONTENT DATABASE&lt;/b&gt;&lt;br&gt;(postgres_content / content_db)" vertex="1">
+          <mxGeometry height="50" width="380" x="500" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="threads_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;threads&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="380" x="500" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="threads_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;title&lt;/b&gt; : VARCHAR(300)&lt;br&gt;&lt;b&gt;description&lt;/b&gt; : TEXT&lt;br&gt;&lt;b&gt;author_id&lt;/b&gt; : UUID - INDEX (&amp;rarr; auth.users.id logical)&lt;br&gt;&lt;b&gt;author_username&lt;/b&gt; : VARCHAR(50) - denormalized&lt;br&gt;&lt;b&gt;author_role&lt;/b&gt; : VARCHAR(20) - DEFAULT &#39;member&#39;&lt;br&gt;&lt;b&gt;like_count&lt;/b&gt; : INTEGER - DEFAULT 0&lt;br&gt;&lt;b&gt;comment_count&lt;/b&gt; : INTEGER - DEFAULT 0&lt;br&gt;&lt;b&gt;hot_score&lt;/b&gt; : FLOAT - DEFAULT 0&lt;br&gt;&lt;b&gt;pinned_at&lt;/b&gt; : TIMESTAMPTZ - NULLABLE (is_pinned = pinned_at IS NOT NULL)&lt;br&gt;&lt;b&gt;locked_at&lt;/b&gt; : TIMESTAMPTZ - NULLABLE (is_locked = locked_at IS NOT NULL)&lt;br&gt;&lt;b&gt;locked_by&lt;/b&gt; : UUID - NULLABLE&lt;br&gt;&lt;b&gt;is_deleted&lt;/b&gt; : BOOLEAN - DEFAULT false (soft delete)&lt;br&gt;&lt;b&gt;author_is_active&lt;/b&gt; : BOOLEAN - DEFAULT true&lt;br&gt;&lt;b&gt;edited_at&lt;/b&gt; : TIMESTAMPTZ - NULLABLE (is_edited = edited_at IS NOT NULL)&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; / &lt;b&gt;updated_at&lt;/b&gt; : TIMESTAMPTZ&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;IDX ix_threads_active_created (created_at WHERE !deleted)&lt;br&gt;IDX ix_threads_active_hot (hot_score WHERE !deleted)&lt;br&gt;@hybrid_property: is_pinned, is_locked, is_edited&lt;br&gt;@property: tags (from tag_objects relationship)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="380" width="380" x="500" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="comments_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;comments&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="380" x="500" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="comments_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;content&lt;/b&gt; : TEXT&lt;br&gt;&lt;b&gt;thread_id&lt;/b&gt; : UUID - FK &amp;rarr; threads.id (CASCADE), INDEX&lt;br&gt;&lt;b&gt;author_id&lt;/b&gt; : UUID - INDEX&lt;br&gt;&lt;b&gt;author_username&lt;/b&gt; : VARCHAR(50) - denormalized&lt;br&gt;&lt;b&gt;author_role&lt;/b&gt; : VARCHAR(20) - DEFAULT &#39;member&#39;&lt;br&gt;&lt;b&gt;parent_id&lt;/b&gt; : UUID - FK &amp;rarr; comments.id (CASCADE), NULLABLE, INDEX&lt;br&gt;&lt;b&gt;depth&lt;/b&gt; : INTEGER - DEFAULT 0&lt;br&gt;&lt;b&gt;like_count&lt;/b&gt; : INTEGER - DEFAULT 0&lt;br&gt;&lt;b&gt;reply_count&lt;/b&gt; : INTEGER - DEFAULT 0&lt;br&gt;&lt;b&gt;is_deleted&lt;/b&gt; : BOOLEAN - DEFAULT false&lt;br&gt;&lt;b&gt;author_is_active&lt;/b&gt; : BOOLEAN - DEFAULT true&lt;br&gt;&lt;b&gt;edited_at&lt;/b&gt; : TIMESTAMPTZ - NULLABLE (is_edited = edited_at IS NOT NULL)&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; / &lt;b&gt;updated_at&lt;/b&gt; : TIMESTAMPTZ&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;IDX ix_comments_active_thread (thread_id, created_at WHERE !deleted)&lt;br&gt;@hybrid_property: is_edited&lt;/div&gt;" vertex="1">
+          <mxGeometry height="310" width="380" x="500" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="tl_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;thread_likes&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="280" x="940" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="tl_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;user_id&lt;/b&gt; : UUID&lt;br&gt;&lt;b&gt;thread_id&lt;/b&gt; : UUID - FK &amp;rarr; threads.id (CASCADE)&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; / &lt;b&gt;updated_at&lt;/b&gt; : TIMESTAMPTZ&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;UNIQUE(user_id, thread_id)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="280" x="940" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;comment_likes&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="280" x="940" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="cl_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;user_id&lt;/b&gt; : UUID&lt;br&gt;&lt;b&gt;comment_id&lt;/b&gt; : UUID - FK &amp;rarr; comments.id (CASCADE)&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; / &lt;b&gt;updated_at&lt;/b&gt; : TIMESTAMPTZ&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;UNIQUE(user_id, comment_id)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="280" x="940" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="reports_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;reports&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="280" x="940" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="reports_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;reporter_id&lt;/b&gt; : UUID - INDEX&lt;br&gt;&lt;b&gt;target_type&lt;/b&gt; : VARCHAR(20) - &#39;thread&#39; or &#39;comment&#39;&lt;br&gt;&lt;b&gt;target_id&lt;/b&gt; : UUID&lt;br&gt;&lt;b&gt;reason&lt;/b&gt; : VARCHAR(30) - FK &amp;rarr; report_reasons.code&lt;br&gt;&lt;b&gt;description&lt;/b&gt; : TEXT - NULLABLE&lt;br&gt;&lt;b&gt;status&lt;/b&gt; : VARCHAR(20) - FK &amp;rarr; report_statuses.code, DEFAULT &#39;pending&#39;&lt;br&gt;&lt;b&gt;reviewed_by&lt;/b&gt; : UUID - NULLABLE&lt;br&gt;&lt;b&gt;reviewed_at&lt;/b&gt; : TIMESTAMPTZ - NULLABLE&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; / &lt;b&gt;updated_at&lt;/b&gt; : TIMESTAMPTZ&lt;/div&gt;" vertex="1">
+          <mxGeometry height="240" width="280" x="940" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_comments_threads" edge="1" parent="1" source="comments_header" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="threads_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_ct_label" connectable="0" parent="fk_comments_threads" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;" value="thread_id" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint x="35" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_comments_self" edge="1" parent="1" source="comments_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=1;dashed=1;endArrow=ERzeroToOne;startArrow=ERzeroToMany;curved=1;" target="comments_cols">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="672" />
+              <mxPoint x="470" y="568" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_cs_label" connectable="0" parent="fk_comments_self" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#82b366;" value="parent_id (nested)" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint x="-40" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_tl_threads" edge="1" parent="1" source="tl_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.2;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="threads_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_tl_label" connectable="0" parent="fk_tl_threads" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;" value="thread_id" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_cl_comments" edge="1" parent="1" source="cl_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="comments_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_cl_label" connectable="0" parent="fk_cl_comments" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;" value="comment_id" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_reports_threads" edge="1" parent="1" source="reports_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.3;exitDx=0;exitDy=0;entryX=1;entryY=0.8;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=1;dashed=1;endArrow=open;startArrow=none;" target="threads_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_rp_label" connectable="0" parent="fk_reports_threads" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#82b366;" value="polymorphic (target_type + target_id)" vertex="1">
+          <mxGeometry relative="1" x="-0.3" as="geometry">
+            <mxPoint y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_reports_comments" edge="1" parent="1" source="reports_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.6;exitDx=0;exitDy=0;entryX=1;entryY=0.8;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=1;dashed=1;endArrow=open;startArrow=none;" target="comments_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_db_label" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontColor=#7B2D8E;" value="&lt;b&gt;NOTIFICATION DATABASE&lt;/b&gt;&lt;br&gt;(postgres_notification / notification_db)" vertex="1">
+          <mxGeometry height="50" width="400" x="40" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;notifications&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="400" x="40" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;user_id&lt;/b&gt; : UUID - (recipient)&lt;br&gt;&lt;b&gt;type&lt;/b&gt; : VARCHAR(30) - FK &amp;rarr; notification_types.code&lt;br&gt;&lt;b&gt;reference_type&lt;/b&gt; : VARCHAR(20) - &#39;thread&#39; or &#39;comment&#39;&lt;br&gt;&lt;b&gt;reference_id&lt;/b&gt; : UUID&lt;br&gt;&lt;b&gt;actor_id&lt;/b&gt; : UUID - (who triggered)&lt;br&gt;&lt;b&gt;thread_id&lt;/b&gt; : UUID - NULLABLE (for navigation)&lt;br&gt;&lt;b&gt;content&lt;/b&gt; : TEXT&lt;br&gt;&lt;b&gt;is_read&lt;/b&gt; : BOOLEAN - DEFAULT false&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; / &lt;b&gt;updated_at&lt;/b&gt; : TIMESTAMPTZ&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;IDX ix_notifications_user_unread (user_id, is_read, created_at)&lt;br&gt;UNIQUE(user_id, actor_id, type, reference_id) - idempotency&lt;/div&gt;" vertex="1">
+          <mxGeometry height="240" width="400" x="40" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="dash_db_label" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontColor=#B45309;" value="&lt;b&gt;DASHBOARD DATABASE&lt;/b&gt;&lt;br&gt;(postgres_dashboard / dashboard_db)" vertex="1">
+          <mxGeometry height="50" width="380" x="550" y="1160" as="geometry" />
+        </mxCell>
+        <mxCell id="audit_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;audit_logs&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="380" x="570" y="1230" as="geometry" />
+        </mxCell>
+        <mxCell id="audit_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#d6b656;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : UUID (PK)&lt;br&gt;&lt;b&gt;actor_id&lt;/b&gt; : UUID - NULLABLE, INDEX&lt;br&gt;&lt;b&gt;action&lt;/b&gt; : VARCHAR(50)&lt;br&gt;&lt;b&gt;target_type&lt;/b&gt; : VARCHAR(20)&lt;br&gt;&lt;b&gt;target_id&lt;/b&gt; : UUID&lt;br&gt;&lt;b&gt;details&lt;/b&gt; : JSONB - NULLABLE&lt;br&gt;&lt;b&gt;created_at&lt;/b&gt; : TIMESTAMPTZ - DEFAULT now()&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="380" x="570" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;shadow=1;" value="&lt;div style=&#39;text-align:left;padding:8px;font-size:11px;line-height:1.8;&#39;&gt;&lt;b&gt;LEGEND&lt;/b&gt;&lt;br&gt;---&lt;br&gt;PK = Primary Key&lt;br&gt;FK = Foreign Key&lt;br&gt;Solid line = FK relationship&lt;br&gt;Dashed line = Polymorphic / self-ref&lt;br&gt;&amp;rarr;1 = One end / &amp;rarr;N = Many end&lt;br&gt;---&lt;br&gt;&lt;b style=&#39;color:#1E40AF;&#39;&gt;BLUE&lt;/b&gt; = Auth DB&lt;br&gt;&lt;b style=&#39;color:#166534;&#39;&gt;GREEN&lt;/b&gt; = Content DB&lt;br&gt;&lt;b style=&#39;color:#7B2D8E;&#39;&gt;PURPLE&lt;/b&gt; = Notification DB&lt;br&gt;&lt;b style=&#39;color:#B45309;&#39;&gt;ORANGE&lt;/b&gt; = Dashboard DB&lt;br&gt;---&lt;br&gt;&lt;i&gt;Each DB is an independent&lt;br&gt;PostgreSQL 16 container&lt;/i&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="310" width="220" x="1000" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="cross_svc_note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#E65100;dashed=1;dashPattern=5 5;" value="&lt;div style=&#39;text-align:center;font-size:10px;color:#666;&#39;&gt;&lt;b&gt;No cross-database foreign keys&lt;/b&gt;&lt;br&gt;author_id, actor_id, user_id reference&lt;br&gt;auth.users.id by convention only&lt;br&gt;(microservice data isolation)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="280" x="500" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="tags_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;tags&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="220" x="1280" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="tags_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;id&lt;/b&gt; : SERIAL (PK)&lt;br&gt;&lt;b&gt;name&lt;/b&gt; : VARCHAR(50) - UNIQUE, INDEX&lt;br&gt;&lt;b&gt;usage_count&lt;/b&gt; : INTEGER - DEFAULT 0&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="220" x="1280" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="thread_tags_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;thread_tags&lt;/b&gt; (junction)" vertex="1">
+          <mxGeometry height="30" width="220" x="1280" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="thread_tags_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;thread_id&lt;/b&gt; : UUID (PK, FK &amp;rarr; threads.id CASCADE)&lt;br&gt;&lt;b&gt;tag_id&lt;/b&gt; : INTEGER (PK, FK &amp;rarr; tags.id CASCADE), INDEX&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="220" x="1280" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="report_reasons_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;report_reasons&lt;/b&gt; (lookup)" vertex="1">
+          <mxGeometry height="30" width="220" x="1280" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="report_reasons_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;code&lt;/b&gt; : VARCHAR(30) (PK)&lt;br&gt;&lt;b&gt;label&lt;/b&gt; : VARCHAR(100)&lt;br&gt;&lt;b&gt;is_active&lt;/b&gt; : BOOLEAN - DEFAULT true&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;Seeded: spam, harassment, inappropriate, other&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="220" x="1280" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_types_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;notification_types&lt;/b&gt; (lookup)" vertex="1">
+          <mxGeometry height="30" width="220" x="500" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_types_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9673a6;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;code&lt;/b&gt; : VARCHAR(30) (PK)&lt;br&gt;&lt;b&gt;label&lt;/b&gt; : VARCHAR(100)&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;Seeded: reply, mention, thread_like, comment_like&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="220" x="500" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_tt_threads" edge="1" parent="1" source="thread_tags_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#82b366;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="threads_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_tt_threads_label" connectable="0" parent="fk_tt_threads" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;" value="thread_id" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_tt_tags" edge="1" parent="1" source="thread_tags_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="tags_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_tt_tags_label" connectable="0" parent="fk_tt_tags" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;" value="tag_id" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="25" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_reports_reasons" edge="1" parent="1" source="reports_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.4;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="report_reasons_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_reports_reasons_label" connectable="0" parent="fk_reports_reasons" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;" value="reason → code" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="report_statuses_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;verticalAlign=middle;align=center;" value="&lt;b&gt;report_statuses&lt;/b&gt; (lookup)" vertex="1">
+          <mxGeometry height="30" width="220" x="1280" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="report_statuses_cols" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#82b366;align=left;verticalAlign=top;" value="&lt;div style=&#39;text-align:left;padding:6px;font-size:11px;line-height:1.6;&#39;&gt;&lt;b&gt;code&lt;/b&gt; : VARCHAR(20) (PK)&lt;br&gt;&lt;b&gt;label&lt;/b&gt; : VARCHAR(100)&lt;/div&gt;&lt;hr style=&#39;margin:2px 0;&#39;/&gt;&lt;div style=&#39;font-size:10px;padding:2px 6px;color:#555;&#39;&gt;Seeded: pending, approved, rejected, archived&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="220" x="1280" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_reports_statuses" edge="1" parent="1" source="reports_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.6;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#82b366;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="report_statuses_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_reports_statuses_label" connectable="0" parent="fk_reports_statuses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#82b366;" value="status → code" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk_notif_types" edge="1" parent="1" source="notif_cols" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#9673a6;strokeWidth=2;endArrow=ERmandOne;startArrow=ERmany;" target="notif_types_cols">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fk_notif_types_label" connectable="0" parent="fk_notif_types" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#9673a6;" value="type → code" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,243 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" version="29.6.6">
+  <diagram id="hld-flow" name="HLD - System Architecture">
+    <mxGraphModel dx="925" dy="455" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="2600" pageHeight="1800" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" value="&lt;b style=&#39;font-size:20px;&#39;&gt;Real-Time Discussion Forum - High-Level Design&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:12px;color:#666;&#39;&gt;Microservice Architecture | FastAPI | PostgreSQL | Redis Streams | Meilisearch&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="700" x="450" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="client" parent="1" style="shape=mxgraph.basic.rect;fillColor=#E3F2FD;strokeColor=#1565C0;rounded=1;arcSize=20;shadow=1;fontSize=13;fontStyle=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;React SPA&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:11px;&#39;&gt;React 19 | Vite | Tailwind CSS&lt;br&gt;Axios (HTTP) | WebSocket (real-time)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="70" width="320" x="640" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="gateway" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F57F17;shadow=1;align=center;verticalAlign=top;spacingTop=8;" value="&lt;b style=&#39;font-size:14px;&#39;&gt;API Gateway&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:11px;&#39;&gt;FastAPI | Port 8000&lt;br&gt;---&lt;br&gt;JWT validation (HttpOnly cookies)&lt;br&gt;Strips client X-User-* headers (anti-spoof)&lt;br&gt;Injects X-User-ID / X-User-Role / X-User-Username&lt;br&gt;Rate limiting (SlowAPI, always enabled)&lt;br&gt;Body size limit (1 MB)&lt;br&gt;Per-backend timeout (5-15s)&lt;br&gt;HTTP reverse proxy &amp;rarr; backend services&lt;br&gt;WebSocket proxy &amp;rarr; Realtime service&lt;/span&gt;" vertex="1">
+          <mxGeometry height="200" width="500" x="550" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_client_gw" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#1565C0;strokeWidth=3;endArrow=block;endFill=1;" target="gateway">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_client_gw_label" connectable="0" parent="edge_client_gw" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;fontColor=#1565C0;labelBackgroundColor=#FFFFFF;" value="&lt;b&gt;HTTPS / WSS&lt;/b&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2" as="geometry" />
+        </mxCell>
+        <mxCell id="auth_svc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;shadow=1;fontSize=11;align=center;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;Auth Service&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;FastAPI :8001&lt;br&gt;---&lt;br&gt;Register / Login&lt;br&gt;JWT + Refresh tokens&lt;br&gt;Password change&lt;br&gt;Role mgmt | Admin user CRUD&lt;br&gt;Account deactivation&lt;br&gt;Default admin seeding&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="180" x="70" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="content_svc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#388E3C;shadow=1;fontSize=11;align=center;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;Content Service&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;FastAPI :8002&lt;br&gt;---&lt;br&gt;Threads/Comments CRUD&lt;br&gt;Edit tracking (hybrid_property)&lt;br&gt;Likes | Reports | @mention parsing&lt;br&gt;Circuit breaker (auth calls)&lt;br&gt;Meili indexing via Redis Stream&lt;br&gt;Counter reconciliation (10 min)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="180" x="290" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_svc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;shadow=1;fontSize=11;align=center;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;Notification Service&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;FastAPI :8003&lt;br&gt;---&lt;br&gt;Reply / Mention / Like&lt;br&gt;notifications&lt;br&gt;thread_id for navigation&lt;br&gt;Mark read / unread&lt;br&gt;DLQ (3 retries)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="180" x="510" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="search_svc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;shadow=1;fontSize=11;align=center;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;Search Service&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;FastAPI :8004&lt;br&gt;---&lt;br&gt;Full-text search&lt;br&gt;Thin adapter to&lt;br&gt;Meilisearch&lt;br&gt;No SQL tables&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="180" x="730" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="dash_svc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;shadow=1;fontSize=11;align=center;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;Dashboard Service&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;FastAPI :8005&lt;br&gt;---&lt;br&gt;Admin platform stats&lt;br&gt;Audit log (CRUD)&lt;br&gt;Mod activity feed&lt;br&gt;Personal user stats&lt;br&gt;DLQ (3 retries)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="180" x="950" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="realtime_svc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#C62828;shadow=1;fontSize=11;align=center;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;Realtime Service&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;FastAPI :8006&lt;br&gt;---&lt;br&gt;WebSocket hub&lt;br&gt;Redis Pub/Sub bridge&lt;br&gt;Thread + notification&lt;br&gt;live updates&lt;br&gt;Auth handshake&lt;br&gt;Message size limit (4 KB)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="180" x="1170" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_auth" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;exitX=0.12;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="auth_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_content" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;exitX=0.28;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="content_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_http_label" connectable="0" parent="gw_content" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#666666;labelBackgroundColor=#FFFFFF;" value="HTTP proxy" vertex="1">
+          <mxGeometry relative="1" x="0.3" as="geometry">
+            <mxPoint x="25" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gw_notif" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;exitX=0.44;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="notif_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_search" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;exitX=0.6;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="search_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_dash" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#666666;strokeWidth=2;endArrow=block;endFill=1;exitX=0.76;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="dash_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_realtime" edge="1" parent="1" source="gateway" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#C62828;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=block;endFill=1;exitX=0.92;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="realtime_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_rt_label" connectable="0" parent="gw_realtime" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#C62828;labelBackgroundColor=#FFFFFF;" value="WebSocket" vertex="1">
+          <mxGeometry relative="1" x="0.3" as="geometry">
+            <mxPoint x="15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="auth_db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#BBDEFB;strokeColor=#1565C0;shadow=1;fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;postgres_auth&lt;br&gt;auth_db&lt;br&gt;---&lt;br&gt;users | roles (lookup)&lt;br&gt;refresh_tokens&lt;/span&gt;" vertex="1">
+          <mxGeometry height="150" width="150" x="85" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="content_db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#C8E6C9;strokeColor=#388E3C;shadow=1;fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;postgres_content&lt;br&gt;content_db&lt;br&gt;---&lt;br&gt;threads | comments&lt;br&gt;thread_likes | comment_likes&lt;br&gt;reports | tags | thread_tags&lt;br&gt;report_reasons | report_statuses (lookups)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="150" width="150" x="305" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#E1BEE7;strokeColor=#7B1FA2;shadow=1;fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;postgres_notification&lt;br&gt;notification_db&lt;br&gt;---&lt;br&gt;notifications&lt;br&gt;notification_types (lookup)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="150" width="150" x="525" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="dash_db" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#FFF9C4;strokeColor=#F9A825;shadow=1;fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;PostgreSQL 16&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;postgres_dashboard&lt;br&gt;dashboard_db&lt;br&gt;---&lt;br&gt;audit_logs&lt;/span&gt;" vertex="1">
+          <mxGeometry height="150" width="150" x="965" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="auth_to_db" edge="1" parent="1" source="auth_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;strokeColor=#1565C0;strokeWidth=2;endArrow=none;endFill=0;" target="auth_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="content_to_db" edge="1" parent="1" source="content_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;strokeColor=#388E3C;strokeWidth=2;endArrow=none;endFill=0;" target="content_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="notif_to_db" edge="1" parent="1" source="notif_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;strokeColor=#7B1FA2;strokeWidth=2;endArrow=none;endFill=0;" target="notif_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dash_to_db" edge="1" parent="1" source="dash_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;strokeColor=#F9A825;strokeWidth=2;endArrow=none;endFill=0;" target="dash_db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFCDD2;strokeColor=#C62828;shadow=1;fontSize=11;align=center;verticalAlign=top;spacingTop=8;" value="&lt;b style=&#39;font-size:14px;&#39;&gt;Redis 7&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:11px;&#39;&gt;---&lt;br&gt;&lt;b&gt;Streams (durable)&lt;/b&gt;: stream:notifications | stream:audit | stream:user_updates | stream:meili_indexing&lt;br&gt;&lt;b&gt;DLQ Streams&lt;/b&gt;: stream:notifications:dead | stream:audit:dead | stream:meili_indexing:dead&lt;br&gt;&lt;b&gt;Pub/Sub (ephemeral)&lt;/b&gt;: thread:* | threads:* | user:* (real-time broadcast)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="110" width="620" x="230" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="meili" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#FFE0B2;strokeColor=#E65100;shadow=1;fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Meilisearch 1.12&lt;/b&gt;&lt;br&gt;&lt;span style=&#39;font-size:10px;&#39;&gt;Full-text search index&lt;br&gt;threads index&lt;/span&gt;" vertex="1">
+          <mxGeometry height="130" width="150" x="745" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="search_to_meili" edge="1" parent="1" source="search_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;strokeColor=#E65100;strokeWidth=2;endArrow=none;endFill=0;" target="meili">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="content_to_meili" edge="1" parent="1" source="content_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#E65100;strokeWidth=1;dashed=1;dashPattern=4 4;endArrow=open;endFill=0;exitX=1;exitY=0.8;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="meili">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="490" y="588" />
+              <mxPoint x="490" y="790" />
+              <mxPoint x="745" y="790" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="content_meili_label" connectable="0" parent="content_to_meili" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#E65100;labelBackgroundColor=#FFFFFF;" value="async index" vertex="1">
+          <mxGeometry relative="1" x="0.4" as="geometry">
+            <mxPoint x="-123" y="-40" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="content_to_redis" edge="1" parent="1" source="content_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#C62828;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;" target="redis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="900" />
+              <mxPoint x="416" y="900" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="content_redis_label" connectable="0" parent="content_to_redis" style="edgeLabel;html=1;align=left;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#C62828;labelBackgroundColor=#FFFFFF;" value="&lt;b&gt;XADD&lt;/b&gt; stream:notifications&lt;br&gt;&lt;b&gt;XADD&lt;/b&gt; stream:audit&lt;br&gt;&lt;b&gt;XADD&lt;/b&gt; stream:meili_indexing&lt;br&gt;&lt;b&gt;PUBLISH&lt;/b&gt; thread:* threads:*" vertex="1">
+          <mxGeometry relative="1" x="0.2" as="geometry">
+            <mxPoint x="70" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="auth_to_redis" edge="1" parent="1" source="auth_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#C62828;strokeWidth=1;dashed=1;dashPattern=4 4;endArrow=block;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.1;entryY=0;entryDx=0;entryDy=0;" target="redis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="900" />
+              <mxPoint x="292" y="900" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="auth_redis_label" connectable="0" parent="auth_to_redis" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#C62828;labelBackgroundColor=#FFFFFF;" value="XADD stream:user_updates" vertex="1">
+          <mxGeometry relative="1" x="0.4" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redis_to_notif" edge="1" parent="1" source="redis" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#7B1FA2;strokeWidth=2;endArrow=block;endFill=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 4;" target="notif_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="910" />
+              <mxPoint x="600" y="910" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redis_notif_label" connectable="0" parent="redis_to_notif" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#7B1FA2;labelBackgroundColor=#FFFFFF;" value="XREADGROUP&lt;br&gt;stream:notifications" vertex="1">
+          <mxGeometry relative="1" x="-0.3" as="geometry">
+            <mxPoint x="-10" y="39" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redis_to_dash" edge="1" parent="1" source="redis" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#F9A825;strokeWidth=2;endArrow=block;endFill=1;exitX=0.8;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 4;" target="dash_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="726" y="910" />
+              <mxPoint x="1040" y="910" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redis_dash_label" connectable="0" parent="redis_to_dash" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#F9A825;labelBackgroundColor=#FFFFFF;" value="XREADGROUP stream:audit" vertex="1">
+          <mxGeometry relative="1" x="0.3" as="geometry">
+            <mxPoint y="41" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redis_to_realtime" edge="1" parent="1" source="redis" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#C62828;strokeWidth=2;endArrow=block;endFill=1;exitX=0.95;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 4;" target="realtime_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="819" y="910" />
+              <mxPoint x="1260" y="910" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redis_rt_label" connectable="0" parent="redis_to_realtime" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#C62828;labelBackgroundColor=#FFFFFF;" value="SUBSCRIBE thread:* user:*" vertex="1">
+          <mxGeometry relative="1" x="0.5" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redis_to_content" edge="1" parent="1" source="redis" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#388E3C;strokeWidth=1;endArrow=block;endFill=1;exitX=0.2;exitY=0;exitDx=0;exitDy=0;entryX=0.3;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=4 4;" target="content_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="354" y="900" />
+              <mxPoint x="344" y="900" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="redis_content_label" connectable="0" parent="redis_to_content" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#388E3C;labelBackgroundColor=#FFFFFF;" value="XREADGROUP stream:user_updates" vertex="1">
+          <mxGeometry relative="1" x="-0.3" as="geometry">
+            <mxPoint x="-4" y="62" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dash_to_auth" edge="1" parent="1" source="dash_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#999999;strokeWidth=1;dashed=1;endArrow=open;endFill=0;exitX=0;exitY=0.3;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;" target="auth_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="930" y="508" />
+              <mxPoint x="930" y="420" />
+              <mxPoint x="270" y="420" />
+              <mxPoint x="270" y="508" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dash_auth_label" connectable="0" parent="dash_to_auth" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#999999;labelBackgroundColor=#FFFFFF;" value="GET /internal/stats" vertex="1">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dash_to_content" edge="1" parent="1" source="dash_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#999999;strokeWidth=1;dashed=1;endArrow=open;endFill=0;exitX=0;exitY=0.7;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;" target="content_svc">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="930" y="572" />
+              <mxPoint x="930" y="650" />
+              <mxPoint x="490" y="650" />
+              <mxPoint x="490" y="572" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dash_content_label" connectable="0" parent="dash_to_content" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#999999;labelBackgroundColor=#FFFFFF;" value="GET /internal/stats | /internal/activity | /internal/users/{id}/*" vertex="1">
+          <mxGeometry relative="1" x="0.1" as="geometry">
+            <mxPoint y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="content_to_auth" edge="1" parent="1" source="content_svc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;strokeColor=#999999;strokeWidth=1;dashed=1;endArrow=open;endFill=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="auth_svc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="content_auth_label" connectable="0" parent="content_to_auth" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#999999;labelBackgroundColor=#FFFFFF;" value="POST /internal/users/lookup-usernames" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="internal_secret_note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#E65100;dashed=1;dashPattern=5 5;" value="&lt;div style=&#39;text-align:center;font-size:10px;color:#666;&#39;&gt;&lt;b&gt;All /internal/* calls require&lt;/b&gt;&lt;br&gt;X-Internal-Secret header&lt;br&gt;(shared INTERNAL_SECRET env var)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="250" x="340" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;align=left;verticalAlign=top;shadow=1;" value="&lt;div style=&#39;text-align:left;padding:8px;font-size:11px;line-height:1.9;&#39;&gt;&lt;b style=&#39;font-size:13px;&#39;&gt;LEGEND&lt;/b&gt;&lt;br&gt;---&lt;br&gt;&lt;b&gt;Solid line&lt;/b&gt; = Synchronous HTTP&lt;br&gt;&lt;b&gt;Dashed line&lt;/b&gt; = Async events (Streams/Pub-Sub)&lt;br&gt;&lt;b style=&#39;color:#C62828;&#39;&gt;Red&lt;/b&gt; = Redis event flow&lt;br&gt;&lt;b style=&#39;color:#666;&#39;&gt;Grey&lt;/b&gt; = Gateway proxy / inter-service HTTP&lt;br&gt;---&lt;br&gt;&lt;b&gt;Docker containers:&lt;/b&gt; 7 services + 4 PG + 1 Redis + 1 Meilisearch&lt;br&gt;&lt;b&gt;Auth pattern:&lt;/b&gt; HS256 JWT in HttpOnly cookies&lt;br&gt;&lt;b&gt;Durable events:&lt;/b&gt; Redis Streams + XREADGROUP consumer groups&lt;br&gt;&lt;b&gt;Ephemeral events:&lt;/b&gt; Redis Pub/Sub &amp;rarr; WebSocket broadcast&lt;br&gt;&lt;b&gt;Pagination:&lt;/b&gt; Cursor-based (CursorPage&amp;lt;T&amp;gt;)&lt;br&gt;&lt;b&gt;Stack:&lt;/b&gt; FastAPI + Uvicorn (all 7 services)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="280" width="380" x="970" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="flow_note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#388E3C;shadow=1;" value="&lt;div style=&#39;text-align:center;font-size:10px;color:#333;line-height:1.6;&#39;&gt;&lt;b&gt;Event Flow Example: User Likes a Thread&lt;/b&gt;&lt;br&gt;1. Client &amp;rarr; Gateway &amp;rarr; Content Service (HTTP)&lt;br&gt;2. Content &amp;rarr; XADD stream:notifications (Redis Stream)&lt;br&gt;3. Content &amp;rarr; XADD stream:audit (Redis Stream)&lt;br&gt;4. Content &amp;rarr; PUBLISH thread:{id} (Redis Pub/Sub)&lt;br&gt;5. Notification Service &amp;rarr; XREADGROUP &amp;rarr; saves to DB &amp;rarr; PUBLISH user:{id}&lt;br&gt;6. Dashboard Service &amp;rarr; XREADGROUP &amp;rarr; saves audit_log to DB&lt;br&gt;7. Realtime Service &amp;rarr; SUBSCRIBE &amp;rarr; pushes to WebSocket clients&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="620" x="230" y="1050" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
